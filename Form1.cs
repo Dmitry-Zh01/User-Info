@@ -2,7 +2,8 @@ using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing;
-using System.DirectoryServices;  
+using System.DirectoryServices; 
+using System.Text; 
 
 namespace FormApp;
 
@@ -19,7 +20,8 @@ public partial class Form1 : Form
 	{
    	 string username = InputTextBox1.Text;
 	 InputTextBox1.Text = null;
-  
+	 MessageTextBox1.Text = null;
+
          try  
          {  
             // create LDAP connection object  
@@ -42,13 +44,58 @@ public partial class Form1 : Form
   
                ResultPropertyCollection fields = result.Properties;  
   
+StringBuilder sb = new StringBuilder();
+
+
                foreach (String ldapField in fields.PropertyNames)  
                {  
                   // cycle through objects in each field e.g. group membership  
                   // (for many fields there will only be one object such as name)  
-                  foreach (Object myCollection in fields[ldapField]) 
-                     MessageTextBox1.Text += ($"{ldapField}: \n {myCollection.ToString()}");
+                  foreach (Object myCollection in fields[ldapField]) {
 
+// тут указаны условия аттрибутов
+
+if (ldapField == "name"){
+			sb.Append($"Имя: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "mail"){
+
+			sb.AppendFormat($"Почта: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "distinguishedname"){
+
+			sb.AppendFormat($"distinguishedname: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "whencreated"){
+
+			sb.AppendFormat($"Создан: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "pwdlastset"){
+
+			sb.AppendFormat($"Пароль: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "title"){
+
+			sb.AppendFormat($"Должность: {myCollection.ToString()} \r\n");
+			}
+
+else if (ldapField == "proxyaddresses"){
+
+			sb.AppendFormat($"{myCollection.ToString()} \r\n");
+			}
+
+MessageTextBox1.Text = ($"{sb}");
+
+
+
+// тут завершаются указания условий аттрибутов
+
+}
                }  
             }  
   
@@ -59,11 +106,19 @@ public partial class Form1 : Form
             } 
          }
   
-         catch (Exception c)  
+     //    catch (Exception c)  
+     //   {  
+     //       MessageTextBox1.Text = c.ToString();  
+     //   }  
+
+         catch (System.ArgumentException qe)  
         {  
-            MessageTextBox1.Text = c.ToString();  
+            MessageTextBox1.Text = $"Ничего не введено. Введите ID пользователя. \r\n Ошибка: \r\n {qe}"; 
+
         }  
       }  
+
+
 
       static DirectoryEntry createDirectoryEntry()  
       {  
