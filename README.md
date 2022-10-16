@@ -1,7 +1,7 @@
 Hello, everyone.
 This little project requires net6.0
 
-Using the application type user identificator from Active Directory (login id) and press find button ("Найти").
+Using the application type user identificator from Active Directory (login id) in the input textbox ("Введите ID") and press find button ("Найти").
 Clear button ("Очистить") makes output textbox empty
 Exit button ("Выйти") closes the application.
 
